@@ -10,13 +10,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "examplebycoding/ViewController.swift"
-            timestampString = "555004498.99632"
+            timestampString = "555009066.0136909"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "237"
-            endingLineNumber = "237"
-            landmarkName = "smallImgCell"
-            landmarkType = "3">
+            startingLineNumber = "221"
+            endingLineNumber = "221"
+            landmarkName = "unknown"
+            landmarkType = "0">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

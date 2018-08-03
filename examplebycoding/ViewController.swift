@@ -10,21 +10,8 @@ import UIKit
 
 class ViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
 
-    // test1
-    let aView : UIImageView = {
-        let img = UIImageView(image: #imageLiteral(resourceName: "icon"))
-        img.translatesAutoresizingMaskIntoConstraints = false
-        return img
-    }()
-
-    
-    let bView: UIImageView = {
-        let img = UIImageView(image: #imageLiteral(resourceName: "cat"))
-        img.translatesAutoresizingMaskIntoConstraints = false
-        return img
-    }()
-    
-    // test2
+   
+    // define parameters of viewController
     let smallImgCellId = "smallImgCellId"
     let bigImgCellId = "bigImgCellId"
     var time = 1
@@ -34,6 +21,8 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     var iconsCollec: [String]? {
         return iconsArray
     }
+    
+    // define items for the ViewController 1/1
     let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = 16
@@ -41,57 +30,66 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
         cv.backgroundColor = .clear
         return cv
-    
     }()
-    
-    let backgroundView : UIImageView = {
-        let iv = UIImageView(image: #imageLiteral(resourceName: "bg-1"))
-        iv.contentMode = .scaleAspectFill
-        return iv
-    }()
+
     
     
     override func viewDidLoad() {
         
         super.viewDidLoad()
+        
+        setBackgroudView()
+        
+        setContentView()
+    }
+    
+    // setup the backgroudView
+    // need to addSubView first and set anchor
+    func setBackgroudView() {
         view.backgroundColor = .white
-        view.addSubview(backgroundView)
-        // set a test view
-        //setFirstTestView()
-        setSecondView()
-       
+        let iv = UIImageView(image: #imageLiteral(resourceName: "bg-1"))
+        iv.contentMode = .scaleAspectFill
+        view.addSubview(iv)
+        iv.anchor(top: view.topAnchor, leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: view.trailingAnchor, padding: .zero, size: .zero)
+        
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    // setup viewcontroller content view
+    func setContentView() {
+        
+        view.addSubview(collectionView)
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        
+        collectionView.register(BigImgCell.self, forCellWithReuseIdentifier: bigImgCellId)
+        collectionView.register(SmallImgCell.self, forCellWithReuseIdentifier: smallImgCellId)
+        
+        collectionView.anchor(top: view.topAnchor, leading: view.safeAreaLayoutGuide.leadingAnchor, bottom: view.bottomAnchor, trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top: 0, left: 0, bottom: 0, right: 0), size: .init(width: 0, height: 0 ) )
     }
+
     
-    
-    
-    
+    // return how many sections collectionView has
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 2
     }
     
+    // return  number of items for each sections
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if section == 0 {
-             print("6")
             return 1
         } else {
-             print("7")
             return 17
         }
     }
     
+    // return cells in item for every section
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if indexPath.section == 0 {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: bigImgCellId, for: indexPath) as! bigImgCell
-             print("1")
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: bigImgCellId, for: indexPath) as! BigImgCell
             cell.images = imagesArray
             return cell
         }
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: smallImgCellId, for: indexPath) as! smallImgCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: smallImgCellId, for: indexPath) as! SmallImgCell
         if let imgName = iconsCollec?[indexPath.item%6] {
             cell.imageView.image = UIImage(named: imgName)
             cell.infoView.text = namesArray[indexPath.item%6]
@@ -100,60 +98,44 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         
     }
     
+    //   define the size for every item
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        
         if indexPath.section == 0 {
-            print(8)
             return CGSize(width: view.frame.width, height: 300)
         }else {
-             print(9)
             return CGSize(width: (view.frame.width/3) - 16 , height: 130)
         }
+        
     }
     
+    //   define the size of the
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         
         if section == 1 {
-             print("4")
             return UIEdgeInsets(top: 10, left: 8, bottom: 10, right: 8)
         }
-         print("5")
         return UIEdgeInsets(top: 10, left: 8, bottom: 10, right: 0)
-    }
-    
-    
-    
-    // view set of test2
-    func setSecondView(){
-        view.addSubview(collectionView)
-        collectionView.dataSource = self
-        collectionView.delegate = self
-        
-        collectionView.register(bigImgCell.self, forCellWithReuseIdentifier: bigImgCellId)
-        collectionView.register(smallImgCell.self, forCellWithReuseIdentifier: smallImgCellId)
-        
-        backgroundView.anchor(top: view.topAnchor, leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: view.trailingAnchor, padding: .zero, size: .zero)
-        collectionView.anchor(top: view.topAnchor, leading: view.safeAreaLayoutGuide.leadingAnchor, bottom: view.bottomAnchor, trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top: 0, left: 0, bottom: 0, right: 0), size: .init(width: 0, height: 0 ) )
-    }
-    
-    // view set of test1
-    func setFirstTestView(){
-        [aView, bView].forEach {view.addSubview($0)}
-        aView.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: nil, bottom: nil, trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top: 12, left: 0, bottom: 0, right: 12), size: .init(width: 100, height: 100))
-        bView.anchor(top: aView.bottomAnchor, leading: nil, bottom: nil, trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top: 20, left: 0, bottom: 0, right : 12), size: .init(width: 100, height: 100))
     }
 
 }
 
-// test2
+// define classes in the 1st collectionView
 
-class bigImgCell : UICollectionViewCell, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
+class BigImgCell : UICollectionViewCell, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
+    
+    
     var images: [String]? {
         didSet {
             collectionView.reloadData()
         }
     }
     
+    let cellId = "cellId"
+    
+    // define  view(s)  for BigImgCell view  1/1
     let collectionView : UICollectionView = {
+        
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = 30
         layout.scrollDirection = .horizontal
@@ -162,13 +144,14 @@ class bigImgCell : UICollectionViewCell, UICollectionViewDelegate, UICollectionV
         return cv
     }()
     
-    let cellId = "cellId"
+   
     
     override init(frame: CGRect){
         super.init(frame: frame)
         setup()
     }
     
+    // setup BigImgCell content view
     func setup(){
         backgroundColor = .clear
         addSubview(collectionView)
@@ -206,23 +189,24 @@ class bigImgCell : UICollectionViewCell, UICollectionViewDelegate, UICollectionV
     
     private class MiniCell: UICollectionViewCell{
         
-        
+        // define view(s) for Minicell view  1/1
         let imageView : UIImageView = {
             let iv = UIImageView()
+            iv.translatesAutoresizingMaskIntoConstraints = false
             iv.contentMode = .scaleAspectFill
             iv.clipsToBounds = true
             iv.layer.cornerRadius = 10
             return iv
         }()
         
+        
         override init(frame: CGRect){
             super.init(frame: frame)
             setup()
         }
         
+        // setup MiniCell content view
         func setup(){
-//            backgroundColor = .blue
-            
             addSubview(imageView)
             imageView.anchor(top: topAnchor, leading: leadingAnchor, bottom: bottomAnchor, trailing: trailingAnchor, padding: .zero, size: .zero)
         }
@@ -234,15 +218,19 @@ class bigImgCell : UICollectionViewCell, UICollectionViewDelegate, UICollectionV
     }
 }
 
-class smallImgCell : UICollectionViewCell{
+class SmallImgCell : UICollectionViewCell{
+    
+    // define view(s) for SmallImgCell view  1/2
     let imageView : UIImageView = {
         let iv = UIImageView()
+        iv.translatesAutoresizingMaskIntoConstraints = false
         iv.contentMode = .scaleAspectFill
         iv.clipsToBounds = true
         iv.layer.cornerRadius = 3
         return iv
     }()
     
+    // define view(s) for SmallImgCell view  2/2
     let infoView: UITextView = {
         let txt = UITextView()
         txt.font = UIFont.boldSystemFont(ofSize: 18)
@@ -260,6 +248,7 @@ class smallImgCell : UICollectionViewCell{
         setup()
     }
     
+    // setup SmallImgCell content view
     func setup(){
         backgroundColor = .clear
         addSubview(infoView)
